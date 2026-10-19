@@ -1,0 +1,130 @@
+/* ==========================================================================
+   ANGLICAN MODEL COLLEGE (AMCO) - A4 PRINT STYLESHEET
+   Accurately formatted for single-sheet A4 printing
+   ========================================================================== */
+
+@page {
+  size: A4 portrait;
+  margin: 6mm 8mm;
+}
+
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10.5pt !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Hide all interactive app elements */
+  header.app-header,
+  nav,
+  .no-print,
+  .btn,
+  .nav-tabs,
+  #toast-container,
+  .modal-overlay:not(.print-active-modal),
+  .modal-header,
+  .modal-footer,
+  .action-buttons,
+  .tab-pane:not(.active-printable) {
+    display: none !important;
+  }
+
+  /* Unset modal wrappers when printing */
+  .modal-overlay.print-active-modal {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  .modal-overlay.print-active-modal .modal-container {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    transform: none !important;
+  }
+
+  .modal-overlay.print-active-modal .modal-body {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Report Card Container */
+  .report-card-print-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: none !important;
+    color: #000000 !important;
+  }
+
+  /* Print Borders and Tables */
+  .report-sheet-border {
+    border: 2px solid #000000 !important;
+    padding: 4px !important;
+  }
+
+  .report-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-bottom: 4px !important;
+  }
+
+  .report-table th,
+  .report-table td {
+    border: 1px solid #000000 !important;
+    padding: 2.5px 4px !important;
+    font-size: 8.5pt !important;
+    color: #000000 !important;
+  }
+
+  .report-table th {
+    background-color: #f1f5f9 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+  }
+
+  .domain-table th,
+  .domain-table td {
+    padding: 2px 3px !important;
+    font-size: 7.5pt !important;
+    text-align: center !important;
+  }
+
+  /* Prevent page breaks inside critical sections */
+  .report-header,
+  .report-student-meta,
+  .report-academic-table,
+  .report-affective-section,
+  .report-psychomotor-section,
+  .report-comments-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Watermark and Stamp in print */
+  .school-crest-print {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .school-stamp-box {
+    border: 1.5px dashed #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

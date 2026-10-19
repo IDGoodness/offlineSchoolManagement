@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anglican Model College (AMCO) - Offline School Management System</title>
+  <!-- 100% Self-Contained Offline Stylesheets: Zero external CDNs or network calls -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       VIBRANT SHADCN-STYLE APP HEADER & NAVIGATION
+       ========================================================================= -->
+  <header class="app-header py-3.5 px-4 no-print">
+    <div class="container flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- School Identity & Crest -->
+      <div class="school-brand">
+        <!-- Embedded SVG Crest -->
+        <svg class="school-crest-svg" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5 L90 20 V65 C90 95 50 115 50 115 C50 115 10 95 10 65 V20 Z" fill="#ffffff" stroke="#d97706" stroke-width="4"/>
+          <path d="M50 14 L82 26 V62 C82 86 50 103 50 103 C50 103 18 86 18 62 V26 Z" fill="#047857"/>
+          <rect x="46" y="28" width="8" height="42" fill="#ffffff"/>
+          <rect x="34" y="38" width="32" height="8" fill="#ffffff"/>
+          <path d="M32 80 Q50 72 50 82 Q50 72 68 80 L68 90 Q50 82 50 92 Q50 82 32 90 Z" fill="#d97706"/>
+        </svg>
+        <div>
+          <div class="flex items-center gap-2 border-blue-200 ">
+            <h1 class="text-base md:text-lg font-bold tracking-tight text-white leading-tight">ANGLICAN MODEL COLLEGE</h1>
+            <span class="badge" style="background: rgba(255,255,255,0.2); color: #fff; border-color: rgba(255,255,255,0.3); border-radius: 5%;">SCHOOL PORTAL</span>
+          </div>
+          <p class="text-xs text-slate-200 tracking-wide font-medium">P.O. Box 1909, Ogbomoso</p>
+        </div>
+      </div>
+
+      <!-- User Session & Role Switcher with React Icons -->
+      <div class="flex items-center gap-3">
+        <div class="text-right text-xs">
+          <div class="text-slate-300">Logged in as:</div>
+          <div class="flex items-center gap-1.5 justify-end">
+            <span id="header-user-badge" class="font-semibold text-white">Administrator</span>
+            <span id="header-user-role-label" class="badge badge-primary text-xs" style="background:#047857; color:#fff; border-color:#10b981;">ADMIN</span>
+          </div>
+        </div>
+
+        <!-- Role Toggle & Authentication with React Icons -->
+        <div class="inline-flex items-center p-1 rounded-md text-xs gap-1" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);">
+          <button id="btn-open-login-modal" class="btn btn-sm text-xs" style="background: #ffffff; color: #0f172a; font-weight: 600;" title="Login or Register Staff Account">
+            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Login / Register
+          </button>
+          <button id="btn-quick-admin" class="btn btn-sm btn-outline text-xs" style="background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25);" title="Switch to Admin">
+            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin
+          </button>
+          <button id="btn-quick-teacher" class="btn btn-sm btn-outline text-xs" style="background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25);" title="Switch to Teacher">
+            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Teacher
+          </button>
+          <button id="btn-header-logout" class="btn btn-sm text-xs" style="background: rgba(239,68,68,0.25); color: #fecaca; border: 1px solid rgba(239,68,68,0.4);" title="Logout">
+            <svg class="icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Radix Segmented Navigation Bar with Official React Icons -->
+    <div class="container mt-3">
+      <div class="nav-tab-wrapper">
+        <nav class="nav-tabs">
+          <button class="nav-tab-btn active" data-tab="tab-students">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Student Database</span>
+          </button>
+          <button class="nav-tab-btn admin-only" data-tab="tab-registration">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span>Student Registration</span>
+          </button>
+          <button class="nav-tab-btn admin-only" data-tab="tab-classes">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Classes & Subjects</span>
+          </button>
+          <button class="nav-tab-btn admin-only" data-tab="tab-teachers">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Teachers & Staff</span>
+          </button>
+          <button class="nav-tab-btn" data-tab="tab-results">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>Results Entry</span>
+          </button>
+          <button class="nav-tab-btn" data-tab="tab-domain">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Form Tutor Domain</span>
+          </button>
+          <button class="nav-tab-btn" data-tab="tab-report-card">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span>Report Card</span>
+          </button>
+          <button class="nav-tab-btn admin-only" data-tab="tab-backup">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            <span>Backup & Restore</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================= -->
+  <main class="container my-6 flex-1">
+
+    <!-- -----------------------------------------------------------------------
+         TAB 1: STUDENT DATABASE & DIRECTORY
+         ----------------------------------------------------------------------- -->
+    <section id="tab-students" class="tab-pane">
+
+      <!-- Colorful Shadcn Dashboard Metric Cards with React Icons -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        
+        <!-- Card 1: Total Students (Blue) -->
+        <div class="metric-card card-blue">
+          <div class="flex items-center justify-between mb-2">
+            <span class="metric-title font-bold text-slate-700">Total Enrolled</span>
+            <div class="metric-icon-box bg-blue">
+              <svg class="icon" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+          </div>
+          <div id="stat-total-students" class="metric-value text-blue-700">5</div>
+          <div class="metric-desc">Registered across all levels</div>
+        </div>
+
+        <!-- Card 2: Junior Secondary (Emerald) -->
+        <div class="metric-card card-emerald">
+          <div class="flex items-center justify-between mb-2">
+            <span class="metric-title font-bold text-slate-700">Junior Secondary</span>
+            <div class="metric-icon-box bg-emerald">
+              <svg class="icon" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+          </div>
+          <div id="stat-junior-students" class="metric-value text-emerald-700">2</div>
+          <div class="metric-desc">JSS 1, JSS 2, JSS 3</div>
+        </div>
+
+        <!-- Card 3: Senior Secondary (Purple) -->
+        <div class="metric-card card-purple">
+          <div class="flex items-center justify-between mb-2">
+            <span class="metric-title font-bold text-slate-700">Senior Secondary</span>
+            <div class="metric-icon-box bg-purple">
+              <svg class="icon" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31L4.69 19.3A2 2 0 0 0 6.44 22h11.12a2 2 0 0 0 1.75-2.7L14 9.31V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="16" x2="17" y2="16"/></svg>
+            </div>
+          </div>
+          <div id="stat-senior-students" class="metric-value text-purple-700">3</div>
+          <div class="metric-desc">SSS 1, SSS 2, SSS 3</div>
+        </div>
+
+        <!-- Card 4: Active Subjects (Amber) -->
+        <div class="metric-card card-amber">
+          <div class="flex items-center justify-between mb-2">
+            <span class="metric-title font-bold text-slate-700">Active Subjects</span>
+            <div class="metric-icon-box bg-amber">
+              <svg class="icon" viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+          </div>
+          <div id="stat-total-subjects" class="metric-value text-amber-700">18</div>
+          <div class="metric-desc">Junior & Senior curricula</div>
+        </div>
+
+      </div>
+
+      <div class="card mb-6">
+        <div class="card-header">
+          <div>
+            <h2 class="text-lg font-bold tracking-tight text-foreground">Student Database</h2>
+            <p class="text-xs text-muted-foreground">Searchable and filterable directory of all Junior & Senior students</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="student-count-badge" class="badge badge-secondary font-semibold">0 Students</span>
+            <button class="btn btn-emerald admin-only" onclick="window.AppNavigation.switchTab('tab-registration')">
+              <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Register Student
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Filters & Search Toolbar -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            <div>
+              <label class="form-label">Search Student</label>
+              <div class="relative">
+                <input type="text" id="search-students-input" class="form-input" placeholder="Search by name, admission no, or phone...">
+              </div>
+            </div>
+            <div>
+              <label class="form-label">Filter by Class</label>
+              <select id="filter-class-select" class="form-select font-medium">
+                <option value="ALL">All Classes (Junior & Senior)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Filter by Gender</label>
+              <select id="filter-gender-select" class="form-select font-medium">
+                <option value="ALL">All Genders</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Students Data Table -->
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Adm. No</th>
+                  <th>Form No</th>
+                  <th>Applicant Name</th>
+                  <th>Sex</th>
+                  <th>Class</th>
+                  <th>Admission Status</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <!-- Populated via students.js with React Icons -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 2: STUDENT REGISTRATION FORM (Reference Page 1 Exact Match)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-registration" class="tab-pane hidden">
+      <div class="card max-w-4xl mx-auto mb-8">
+        <div class="card-header bg-slate-50">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-primary text-xs">Official Entrance Form</span>
+              <span class="badge badge-secondary text-xs">Junior & Senior Classes</span>
+            </div>
+            <h2 id="form-action-title" class="text-lg font-bold tracking-tight text-foreground">New Student Registration</h2>
+            <p class="text-xs text-muted-foreground">Anglican Model College P.O. Box 1909 Ogbomoso - Reference Standard</p>
+          </div>
+          <div id="reg-edit-indicator" class="hidden flex items-center gap-2">
+            <span class="badge badge-warning text-xs font-semibold">Editing Mode</span>
+            <button id="btn-cancel-edit" class="btn btn-outline btn-sm text-xs" type="button" title="Cancel edit and return to new student registration">
+              <svg class="icon" viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form id="student-registration-form">
+
+            <!-- Top Row: Form No, Admission No & Class Assignment -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-3.5 bg-blue-50/50 rounded-lg">
+              <div class="form-group m-0">
+                <label class="form-label">FORM NO. <span class="required">*</span></label>
+                <input type="text" id="reg-form-no" class="form-input font-mono font-bold" required placeholder="e.g. 0135">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label">ADMISSION NO. <span class="required">*</span></label>
+                <input type="text" id="reg-adm-no" class="form-input font-mono font-bold" required placeholder="e.g. 2508">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label">ASSIGNED CLASS <span class="required">*</span></label>
+                <select id="reg-class-select" class="form-select font-bold" required>
+                  <!-- Populated dynamically: JSS 1-3, SSS 1-3 -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Field 1: Name of Applicant -->
+            <div class="form-group">
+              <label class="form-label">1. Name Of Applicant (surname First) <span class="required">*</span></label>
+              <input type="text" id="reg-name-applicant" class="form-input font-bold uppercase" required placeholder="e.g. ADEGBITE JOANNA">
+            </div>
+
+            <!-- Field 2: Sex, Religion, Denomination -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="form-group">
+                <label class="form-label">2. Sex <span class="required">*</span></label>
+                <select id="reg-sex" class="form-select font-medium" required>
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Religion</label>
+                <input type="text" id="reg-religion" class="form-input" placeholder="e.g. Christianity / Islam" value="Christianity">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Denomination</label>
+                <input type="text" id="reg-denomination" class="form-input" placeholder="e.g. Anglican / Catholic / Baptist" value="Anglican">
+              </div>
+            </div>
+
+            <!-- Field 3: Date Of Birth, Nationality -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">3. Date Of Birth</label>
+                <input type="date" id="reg-dob" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nationality</label>
+                <input type="text" id="reg-nationality" class="form-input" value="Nigerian">
+              </div>
+            </div>
+
+            <!-- Field 4: State Of Origin, L.G.A., Home Town -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="form-group">
+                <label class="form-label">4. State Of Origin</label>
+                <input type="text" id="reg-state-origin" class="form-input" placeholder="e.g. Oyo" value="Oyo">
+              </div>
+              <div class="form-group">
+                <label class="form-label">L.G.A.</label>
+                <input type="text" id="reg-lga" class="form-input" placeholder="e.g. Ogbomoso North" value="Ogbomoso North">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Home Town</label>
+                <input type="text" id="reg-home-town" class="form-input" placeholder="e.g. Ogbomoso" value="Ogbomoso">
+              </div>
+            </div>
+
+            <!-- Field 5: Name Of Present School, Present Class -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">5. Name Of Present School</label>
+                <input type="text" id="reg-present-school" class="form-input" placeholder="e.g. St. David's Model School, Ogbomoso">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Present Class</label>
+                <input type="text" id="reg-present-class" class="form-input" value="Primary 6">
+              </div>
+            </div>
+
+            <!-- Field 6 & 7: Name and Address of Parent -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">6. Name of Parent</label>
+                <input type="text" id="reg-name-parent" class="form-input" placeholder="e.g. Mr. & Mrs. O. Adegbite">
+              </div>
+              <div class="form-group">
+                <label class="form-label">7. Address of Parent/Guardian</label>
+                <input type="text" id="reg-address-parent" class="form-input" placeholder="e.g. 14 Agbonin Road, Ogbomoso">
+              </div>
+            </div>
+
+            <!-- Field 8 & 9: Occupations -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">8. Occupation of Father/Guardian</label>
+                <input type="text" id="reg-occ-father" class="form-input" placeholder="e.g. Civil Servant / Trader">
+              </div>
+              <div class="form-group">
+                <label class="form-label">9. Occupation of Mother/Guardian</label>
+                <input type="text" id="reg-occ-mother" class="form-input" placeholder="e.g. Businesswoman / Teacher">
+              </div>
+            </div>
+
+            <!-- Field 10: Person Responsible for Payment of Fees -->
+            <div class="form-group">
+              <label class="form-label">10. Name and Address of Person Who will be Responsible for Payment of Your Fees</label>
+              <input type="text" id="reg-responsible-fees" class="form-input" placeholder="e.g. Mr. O. Adegbite (Father), 14 Agbonin Road, Ogbomoso">
+            </div>
+
+            <!-- Field 11 & 12: Medical & Allergy Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">11. Have you any Disability? (State, if any)</label>
+                <div class="flex gap-2">
+                  <select id="reg-has-disability" class="form-select w-28">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                  <input type="text" id="reg-disability-details" class="form-input flex-1" placeholder="State disability if any" value="None">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">12. Are you allergic to inoculation/drug? (State, if any)</label>
+                <div class="flex gap-2">
+                  <select id="reg-is-allergic" class="form-select w-28">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                  <input type="text" id="reg-allergy-details" class="form-input flex-1" placeholder="State allergy if any" value="None">
+                </div>
+              </div>
+            </div>
+
+            <!-- Field 13: Emergency Contact & GSM -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">13. In case of emergency who to contact?</label>
+                <input type="text" id="reg-emergency-contact" class="form-input" placeholder="e.g. Mr. O. Adegbite">
+              </div>
+              <div class="form-group">
+                <label class="form-label">GSM NO. <span class="required">*</span></label>
+                <input type="text" id="reg-gsm-no" class="form-input font-mono font-bold" required placeholder="e.g. 08034567890">
+              </div>
+            </div>
+
+            <!-- OFFICIAL USE ONLY: Entrance Exam Performances -->
+            <div class="official-use-box">
+              <div class="official-use-title">
+                <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                <span>OFFICIAL USE ONLY: Examination & Interview Performances</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+                <div class="form-group m-0">
+                  <label class="form-label text-xs">MATHEMATICS</label>
+                  <input type="number" id="reg-entrance-math" class="form-input text-center font-mono font-semibold" min="0" max="100" placeholder="0-100" value="75">
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label text-xs">ENGLISH</label>
+                  <input type="number" id="reg-entrance-eng" class="form-input text-center font-mono font-semibold" min="0" max="100" placeholder="0-100" value="80">
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label text-xs">GENERAL</label>
+                  <input type="number" id="reg-entrance-gen" class="form-input text-center font-mono font-semibold" min="0" max="100" placeholder="0-100" value="78">
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label text-xs font-bold text-emerald-700">AVERAGE (%)</label>
+                  <input type="text" id="reg-entrance-avg" class="form-input text-center font-bold bg-white text-emerald-700 font-mono" readonly value="77.7">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="form-group m-0">
+                  <label class="form-label text-xs">Interview Performances</label>
+                  <input type="text" id="reg-entrance-interview" class="form-input text-xs" placeholder="e.g. Good verbal expression and attitude" value="Sound moral character and good manners">
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label text-xs font-semibold">REMARK</label>
+                  <select id="reg-entrance-remark" class="form-select font-bold text-xs">
+                    <option value="Admission GRANTED">Admission GRANTED</option>
+                    <option value="Admission NON GRANTED">Admission NON GRANTED</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+              <button type="submit" class="btn btn-emerald btn-lg">
+                <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Student & Enrol
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 3: CLASSES & SUBJECTS ASSIGNMENT
+         ----------------------------------------------------------------------- -->
+    <section id="tab-classes" class="tab-pane hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Left 2 Cols: Junior & Senior Classes Roster -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="card">
+            <div class="card-header bg-slate-50">
+              <div>
+                <h2 class="text-lg font-bold tracking-tight text-foreground">Junior & Senior Classes</h2>
+                <p class="text-xs text-muted-foreground">Manage school levels (JSS 1-3 & SSS 1-3) with arms removed</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="classes-list-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Populated via classes.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Class Box -->
+          <div class="card">
+            <div class="card-header bg-slate-50">
+              <h3 class="text-sm font-bold text-foreground flex items-center gap-1.5">
+                <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create New Class
+              </h3>
+            </div>
+            <div class="card-body">
+              <form id="add-class-form" class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                <div class="form-group m-0">
+                  <label class="form-label">Class Name</label>
+                  <input type="text" id="new-class-name" class="form-input font-bold" placeholder="e.g. SSS 1" required>
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label">Category</label>
+                  <select id="new-class-category" class="form-select font-medium">
+                    <option value="Senior Secondary">Senior Secondary</option>
+                    <option value="Junior Secondary">Junior Secondary</option>
+                  </select>
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label">Class Tutor Name</label>
+                  <input type="text" id="new-class-tutor" class="form-input" placeholder="e.g. Mr. Siyanbola John">
+                </div>
+                <button type="submit" class="btn btn-primary h-9 md:col-span-3">
+                  <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg> Save Class
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Col: Core Subjects Management -->
+        <div class="space-y-6">
+          <div class="card">
+            <div class="card-header bg-slate-50">
+              <h2 class="text-base font-bold tracking-tight text-foreground">Registered Subjects</h2>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-container border-0 rounded-none">
+                <table class="table text-xs">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Code</th>
+                      <th>Subject Name</th>
+                      <th>Category</th>
+                      <th class="text-center">CA</th>
+                      <th class="text-center">Exam</th>
+                      <th class="text-center">Max</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subjects-table-body">
+                    <!-- Populated via classes.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Subject Box -->
+          <div class="card">
+            <div class="card-header bg-slate-50">
+              <h3 class="text-sm font-bold text-foreground flex items-center gap-1.5">
+                <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add New Subject
+              </h3>
+            </div>
+            <div class="card-body">
+              <form id="add-subject-form" class="space-y-3">
+                <div class="form-group m-0">
+                  <label class="form-label">Subject Code</label>
+                  <input type="text" id="new-subject-code" class="form-input uppercase font-mono font-bold" placeholder="e.g. PHY" required>
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label">Subject Name</label>
+                  <input type="text" id="new-subject-name" class="form-input" placeholder="e.g. Physics" required>
+                </div>
+                <div class="form-group m-0">
+                  <label class="form-label">Category</label>
+                  <select id="new-subject-category" class="form-select text-xs font-medium">
+                    <option value="Senior Science">Senior Science</option>
+                    <option value="Senior Commercial/Arts">Senior Commercial / Arts</option>
+                    <option value="Senior Vocational">Senior Vocational</option>
+                    <option value="Junior Core">Junior Core</option>
+                    <option value="Core">Core</option>
+                    <option value="Language">Language</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-outline w-full">Add Subject</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB: TEACHERS & ACADEMIC STAFF MANAGEMENT (Admin Only)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-teachers" class="tab-pane hidden">
+      <div class="card mb-6">
+        <div class="card-header bg-slate-50">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-primary text-xs">Faculty & Form Tutors</span>
+              <span class="badge badge-secondary text-xs">Access Control</span>
+            </div>
+            <h2 class="text-lg font-bold tracking-tight text-foreground">Teachers & Academic Staff Management</h2>
+            <p class="text-xs text-muted-foreground">Register new teachers, assign form classes & subjects, and manage portal login credentials</p>
+          </div>
+          <span id="teachers-count-badge" class="badge badge-primary font-semibold">0 Registered Teachers</span>
+        </div>
+
+        <div class="card-body">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left Col: Register New Teacher Form -->
+            <div class="card border border-blue-200 bg-blue-50/20">
+              <div class="card-header bg-blue-50/60 py-3">
+                <h3 class="text-sm font-bold text-foreground flex items-center gap-2">
+                  <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                  Register New Teacher
+                </h3>
+              </div>
+              <div class="card-body">
+                <form id="register-teacher-form" class="space-y-3.5">
+                  <div class="form-group m-0">
+                    <label class="form-label">Full Name & Title <span class="required">*</span></label>
+                    <input type="text" id="new-teacher-name" class="form-input" required placeholder="e.g. Mr. Adeleke Bamidele">
+                  </div>
+                  <div class="form-group m-0">
+                    <label class="form-label">Professional Role / Title</label>
+                    <input type="text" id="new-teacher-title" class="form-input" placeholder="e.g. Senior Science Master / Form Tutor">
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="form-group m-0">
+                      <label class="form-label">Assigned Class <span class="required">*</span></label>
+                      <select id="new-teacher-class" class="form-select font-bold" required>
+                        <!-- Populated dynamically: JSS 1-3, SSS 1-3 -->
+                      </select>
+                    </div>
+                    <div class="form-group m-0">
+                      <label class="form-label">Assigned Subject <span class="required">*</span></label>
+                      <select id="new-teacher-subject" class="form-select font-bold" required>
+                        <!-- Populated dynamically -->
+                      </select>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="form-group m-0">
+                      <label class="form-label">Login Username <span class="required">*</span></label>
+                      <input type="text" id="new-teacher-username" class="form-input font-mono font-bold" required placeholder="e.g. bamidele">
+                    </div>
+                    <div class="form-group m-0">
+                      <label class="form-label">Password <span class="required">*</span></label>
+                      <input type="password" id="new-teacher-password" class="form-input font-mono" required placeholder="e.g. teacher123">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-emerald w-full mt-2">
+                    <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Register Teacher
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Right Col: Registered Staff Table -->
+            <div class="lg:col-span-2">
+              <div class="card">
+                <div class="card-header bg-slate-50 py-3">
+                  <h3 class="text-sm font-bold text-foreground flex items-center gap-2">
+                    <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Active Teachers Directory
+                  </h3>
+                  <span class="text-xs text-muted-foreground">Stored securely in local database</span>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-container border-0 rounded-none">
+                    <table class="table text-xs">
+                      <thead>
+                        <tr>
+                          <th style="width: 35px;">#</th>
+                          <th>Teacher Name & Designation</th>
+                          <th>Username</th>
+                          <th>Password</th>
+                          <th>Assigned Class</th>
+                          <th>Subject</th>
+                          <th class="text-right" style="width: 140px;">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="teachers-table-body">
+                        <!-- Populated via teachers.js -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 4: RESULTS ENTRY (Teacher Workflow & Validation)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-results" class="tab-pane hidden">
+      <div class="card mb-6">
+        <div class="card-header">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="badge badge-primary text-xs">Semester Scores</span>
+              <span class="badge badge-outline text-xs">Continuous Assessment & Exam</span>
+            </div>
+            <h2 class="text-lg font-bold tracking-tight text-foreground">Results Entry Portal</h2>
+            <p class="text-xs text-muted-foreground">Enter Continuous Assessment (30%) and Examination (70%) with live range checks</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btn-auto-fill-scores" class="btn btn-outline btn-sm" type="button" title="Auto-fill sample scores for testing">
+              <svg class="icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Pre-fill Sample Scores
+            </button>
+            <button id="btn-save-all-scores" class="btn btn-primary" type="button">
+              <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Validate & Save All
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Selection Controls Bar -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 p-3.5 bg-blue-50/50 rounded-lg ">
+            <div>
+              <label class="form-label">Select Class</label>
+              <select id="score-class-select" class="form-select font-bold">
+                <!-- Options populated -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Select Subject</label>
+              <select id="score-subject-select" class="form-select font-bold">
+                <!-- Options populated -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Select Academic Term</label>
+              <select id="score-term-select" class="form-select font-bold">
+                <option value="THIRD">3rd Term (Current Semester)</option>
+                <option value="SECOND">2nd Term</option>
+                <option value="FIRST">1st Term</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Active Subject Indicator -->
+          <div class="flex flex-wrap justify-between items-center mb-3 px-1 gap-2">
+            <h3 id="score-entry-subject-title" class="font-bold text-navy-900 text-sm">
+              Entering Scores
+            </h3>
+            <div class="text-xs text-muted-foreground">
+              Allowed: <strong class="text-emerald-700">C.A. (0 - 30)</strong> • <strong class="text-navy-900">Exam (0 - 70)</strong> • <strong>Total (0 - 100)</strong>
+            </div>
+          </div>
+
+          <!-- Scores Entry Grid -->
+          <div class="table-container">
+            <table class="table score-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">#</th>
+                  <th style="width: 85px;">Adm No</th>
+                  <th>Student Name</th>
+                  <th class="text-center" style="width: 75px;" title="Historical Term 1 Total">1st (100)</th>
+                  <th class="text-center" style="width: 75px;" title="Historical Term 2 Total">2nd (100)</th>
+                  <th class="text-center" style="width: 95px;">3rd Term C.A.<br><span class="text-emerald-700 font-bold">(Max 30)</span></th>
+                  <th class="text-center" style="width: 95px;">3rd Term Exam<br><span class="text-navy-900 font-bold">(Max 70)</span></th>
+                  <th class="text-center" style="width: 80px;">Total (100)</th>
+                  <th class="text-center" style="width: 75px;">Avg (%)</th>
+                  <th class="text-center" style="width: 65px;">Grade</th>
+                  <th class="text-center" style="width: 105px;">Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="scores-entry-tbody">
+                <!-- Populated via scores.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 5: DOMAIN & ATTENDANCE ASSESSMENT (Form Tutor)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-domain" class="tab-pane hidden">
+      <div class="card max-w-4xl mx-auto mb-8">
+        <div class="card-header bg-slate-50">
+          <div>
+            <span class="badge badge-secondary mb-1 text-xs">Form Tutor Assessment</span>
+            <h2 class="text-lg font-bold tracking-tight text-foreground">Behavioural (Affective) & Psychomotor Ratings</h2>
+            <p class="text-xs text-muted-foreground">Rate student non-cognitive development on a scale of 1 to 5</p>
+          </div>
+          <button id="btn-save-domain-assessment" class="btn btn-emerald">
+            <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg> Save Assessment
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Student Selector -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-3.5 bg-blue-50/50 rounded-lg">
+            <div>
+              <label class="form-label">Select Class</label>
+              <select id="domain-class-select" class="form-select font-bold">
+                <!-- Populated -->
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Select Student</label>
+              <select id="domain-student-select" class="form-select font-bold">
+                <!-- Populated -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Attendance Row -->
+          <div class="mb-6 p-4 border rounded-lg bg-white">
+            <h3 class="font-bold text-sm text-foreground mb-3 uppercase tracking-wide">1. Attendance Record</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="form-group m-0">
+                <label class="form-label text-xs">Times School Opened</label>
+                <input type="number" id="att-opened" class="form-input text-center font-bold font-mono" value="120">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label text-xs">Times Present</label>
+                <input type="number" id="att-present" class="form-input text-center font-bold text-emerald-700 font-mono" value="116">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label text-xs">Times Absent</label>
+                <input type="number" id="att-absent" class="form-input text-center font-bold text-destructive font-mono" value="4">
+              </div>
+            </div>
+          </div>
+
+          <!-- Affective Domain (8 Traits) -->
+          <div class="mb-6 p-4 border rounded-lg bg-white">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-sm text-foreground uppercase tracking-wide">2. Behavioural (Affective Domain) — Max 40</h3>
+              <span class="text-xs text-muted-foreground">Keys: 5-Excellent, 4-Good, 3-Average, 2-Below Avg, 1-Fair</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="form-label text-xs">PUNCTUALITY</label>
+                <select id="aff-punctuality" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">NEATNESS</label>
+                <select id="aff-neatness" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">ATTENTIVENESS</label>
+                <select id="aff-attentiveness" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">RELATIONSHIP WITH OTHERS</label>
+                <select id="aff-relationship" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3" selected>3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">POLITENESS</label>
+                <select id="aff-politeness" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">RESPONSIVENESS</label>
+                <select id="aff-responsiveness" class="form-select text-xs font-semibold">
+                  <option value="5" selected>5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">COMMITMENT</label>
+                <select id="aff-commitment" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">CONSISTENCY</label>
+                <select id="aff-consistency" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Psychomotor Domain (7 Traits) -->
+          <div class="mb-6 p-4 border rounded-lg bg-white">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-sm text-foreground uppercase tracking-wide">3. Psychomotor Domain — Max 35</h3>
+              <span class="text-xs text-muted-foreground">Keys: 5-Excellent, 4-Good, 3-Average, 2-Below Avg, 1-Fair</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="form-label text-xs">CRAFTS / DRAWING</label>
+                <select id="psy-crafts" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">TECHNICAL SKILLS</label>
+                <select id="psy-technical" class="form-select text-xs font-semibold">
+                  <option value="5" selected>5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">ICT SKILLS</label>
+                <select id="psy-ict" class="form-select text-xs font-semibold">
+                  <option value="5" selected>5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">GARDENING / FARMING</label>
+                <select id="psy-gardening" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">GAMES & SPORTS</label>
+                <select id="psy-games" class="form-select text-xs font-semibold">
+                  <option value="5">5 - Excellent</option>
+                  <option value="4" selected>4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">CREATIVITY & INITIATIVE</label>
+                <select id="psy-creativity" class="form-select text-xs font-semibold">
+                  <option value="5" selected>5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label text-xs">VERBAL FLUENCY</label>
+                <select id="psy-fluency" class="form-select text-xs font-semibold">
+                  <option value="5" selected>5 - Excellent</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Average</option>
+                  <option value="2">2 - Below Average</option>
+                  <option value="1">1 - Fair</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments & Promotion Status -->
+          <div class="p-4 border rounded-lg bg-white space-y-4">
+            <h3 class="font-bold text-sm text-foreground uppercase tracking-wide">4. Remarks & Promotion Status</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group m-0">
+                <label class="form-label">Class Tutor's Comment</label>
+                <input type="text" id="domain-tutor-comment" class="form-input" placeholder="e.g. she show good manner in the class" value="she show good manner in the class">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label">Principal's Comment</label>
+                <input type="text" id="domain-principal-comment" class="form-input" placeholder="e.g. A EXCELLENT PERFORMANCE. KEEP IT UP." value="A EXCELLENT PERFORMANCE. KEEP IT UP.">
+              </div>
+            </div>
+            <div class="form-group m-0">
+              <label class="form-label font-bold">Promotion Status</label>
+              <select id="domain-promotion-status" class="form-select font-bold">
+                <option value="PROMOTED">PROMOTED</option>
+                <option value="PROMOTED ON TRIAL">PROMOTED ON TRIAL</option>
+                <option value="REPEAT">REPEAT</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 6: REPORT CARD (Print-Ready Layout Matching Reference Page 2)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-report-card" class="tab-pane hidden">
+      <!-- Onscreen Control Bar (Hidden during window.print()) -->
+      <div class="card p-4 mb-6 no-print flex flex-wrap items-center justify-between gap-4 bg-white">
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <label class="text-xs font-bold text-muted-foreground block mb-1">Select Student:</label>
+            <select id="report-student-select" class="form-select font-bold text-sm min-w-64">
+              <!-- Populated -->
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-muted-foreground block mb-1">Academic Term:</label>
+            <select id="report-term-select" class="form-select font-bold text-sm">
+              <option value="THIRD">3rd Term</option>
+              <option value="SECOND">2nd Term</option>
+              <option value="FIRST">1st Term</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="btn-print-report-card" class="btn btn-navy btn-lg">
+            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Report Card (A4)
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Area Rendered by report-card.js -->
+      <div id="printable-report-card-area">
+        <!-- Rendered matching Reference Page 2 -->
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         TAB 7: BACKUP & RESTORE (Offline JSON Persistence)
+         ----------------------------------------------------------------------- -->
+    <section id="tab-backup" class="tab-pane hidden">
+      <div class="card max-w-2xl mx-auto mb-8">
+        <div class="card-header bg-slate-50">
+          <div>
+            <h2 class="text-lg font-bold tracking-tight text-foreground">Database Backup & Offline Portability</h2>
+            <p class="text-xs text-muted-foreground">Safely backup, transport, or restore the complete school dataset</p>
+          </div>
+        </div>
+
+        <div class="card-body space-y-4">
+          <!-- Export Section -->
+          <div class="p-4 border rounded-lg bg-blue-50/40">
+            <h3 class="font-bold text-sm text-foreground mb-1">1. Export Full Database</h3>
+            <p class="text-xs text-muted-foreground mb-3">
+              Downloads a self-contained <code>.json</code> file containing all students, classes, subjects, entrance exams, and academic scores.
+            </p>
+            <button id="btn-export-backup" class="btn btn-primary">
+              <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download Backup (.json)
+            </button>
+          </div>
+
+          <!-- Import Section -->
+          <div class="p-4 border rounded-lg bg-slate-50">
+            <h3 class="font-bold text-sm text-foreground mb-1">2. Restore Database from JSON</h3>
+            <p class="text-xs text-muted-foreground mb-3">
+              Load a previously exported backup file to restore student records, classes, and marks.
+            </p>
+            <input type="file" id="file-import-backup" accept=".json" class="form-input text-xs">
+          </div>
+
+          <!-- Reset Section -->
+          <div class="p-4 border border-rose-200 rounded-lg bg-rose-50/50">
+            <h3 class="font-bold text-sm text-danger-700 mb-1">3. Reset to Demo Seed Data</h3>
+            <p class="text-xs text-muted-foreground mb-3">
+              Restores the default seed database with Adegbite Joanna (Page 1 & 2 reference data) and sample Junior & Senior students.
+            </p>
+            <button id="btn-reset-demo-data" class="btn btn-danger">
+              <svg class="icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Reset Database to Default
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       MODALS (RADIX DIALOG PRIMITIVES)
+       ========================================================================= -->
+
+  <!-- Modal 1: Login / Staff Authentication & Registration -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal-container max-w-md">
+      <div class="modal-header">
+        <h3 class="font-bold text-base text-foreground">Staff & Admin Authentication</h3>
+        <button class="modal-close-btn btn btn-ghost btn-sm" type="button">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Radix Pill Segmented Tab Switcher (Sign In vs Register as Teacher) -->
+        <div class="modal-tabs">
+          <button type="button" id="btn-login-tab-signin" class="modal-tab-btn active">
+            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </button>
+          <button type="button" id="btn-login-tab-register" class="modal-tab-btn">
+            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Register as Teacher
+          </button>
+        </div>
+
+        <!-- PANE 1: Sign In -->
+        <div id="login-pane-signin">
+          <form id="login-modal-form" class="space-y-4">
+            <div class="text-xs text-muted-foreground bg-blue-50/70 p-3 rounded-md border border-blue-200">
+              <strong class="text-blue-900">Default Demo Credentials:</strong><br>
+              • Administrator: <code class="font-bold text-blue-900">admin</code> / <code>admin123</code><br>
+              • Teacher: <code class="font-bold text-blue-900">teacher</code> / <code>teacher123</code>
+            </div>
+            <div class="form-group m-0">
+              <label class="form-label">Username</label>
+              <input type="text" id="login-username" class="form-input font-medium" required placeholder="admin or teacher username">
+            </div>
+            <div class="form-group m-0">
+              <label class="form-label">Password</label>
+              <input type="password" id="login-password" class="form-input font-medium" required placeholder="password">
+            </div>
+            <div class="pt-2">
+              <button type="submit" class="btn btn-primary w-full">Sign In to AMCO</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- PANE 2: Self-Register as Teacher -->
+        <div id="login-pane-register" class="hidden">
+          <form id="self-register-teacher-form" class="space-y-3">
+            <div class="text-xs text-emerald-800 bg-emerald-50 p-2.5 rounded-md border border-emerald-200">
+              Create your teacher account. You will immediately be logged in and can enter term marks.
+            </div>
+            <div class="form-group m-0">
+              <label class="form-label">Full Name & Title <span class="required">*</span></label>
+              <input type="text" id="self-teacher-name" class="form-input" required placeholder="e.g. Mrs. Adebayo Blessing">
+            </div>
+            <div class="form-group m-0">
+              <label class="form-label">Designation / Role</label>
+              <input type="text" id="self-teacher-title" class="form-input" placeholder="e.g. Senior English Tutor">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="form-group m-0">
+                <label class="form-label">Assigned Class <span class="required">*</span></label>
+                <select id="self-teacher-class" class="form-select font-bold" required></select>
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label">Assigned Subject <span class="required">*</span></label>
+                <select id="self-teacher-subject" class="form-select font-bold" required></select>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="form-group m-0">
+                <label class="form-label">Username <span class="required">*</span></label>
+                <input type="text" id="self-teacher-username" class="form-input font-mono font-bold" required placeholder="e.g. blessing">
+              </div>
+              <div class="form-group m-0">
+                <label class="form-label">Password <span class="required">*</span></label>
+                <input type="password" id="self-teacher-password" class="form-input font-mono" required placeholder="e.g. teach2026">
+              </div>
+            </div>
+            <div class="pt-2">
+              <button type="submit" class="btn btn-emerald w-full">Register Account & Sign In</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Candidate Examination Slip (Printable Reference Page 1 Bottom) -->
+  <div id="candidate-slip-modal" class="modal-overlay">
+    <div class="modal-container max-w-2xl">
+      <div class="modal-header no-print">
+        <h3 class="font-bold text-base text-foreground">Candidate Examination Slip</h3>
+        <div class="flex items-center gap-2">
+          <button class="btn btn-primary btn-sm" onclick="window.print()">
+            <svg class="icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print Slip
+          </button>
+          <button class="modal-close-btn btn btn-ghost btn-sm" type="button">✕</button>
+        </div>
+      </div>
+      <div id="candidate-slip-modal-content" class="modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Class Roster Modal -->
+  <div id="class-roster-modal" class="modal-overlay">
+    <div class="modal-container max-w-4xl">
+      <div class="modal-header">
+        <h3 id="class-roster-title" class="font-bold text-base text-foreground">Class Roster</h3>
+        <button class="modal-close-btn btn btn-ghost btn-sm" type="button">✕</button>
+      </div>
+      <div id="class-roster-body" class="modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Class Subjects Modal -->
+  <div id="class-subjects-modal" class="modal-overlay">
+    <div class="modal-container max-w-xl">
+      <div class="modal-header">
+        <h3 id="class-subjects-title" class="font-bold text-base text-foreground">Manage Core Subjects</h3>
+        <button class="modal-close-btn btn btn-ghost btn-sm" type="button">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-xs text-muted-foreground mb-3">Select the subjects offered by all students in this class:</p>
+        <div id="class-subjects-checkboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- Populated -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-class-subjects" class="btn btn-primary">Save Class Subjects</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Student Specific Subjects Modal -->
+  <div id="student-subjects-modal" class="modal-overlay">
+    <div class="modal-container max-w-xl">
+      <div class="modal-header">
+        <h3 id="student-subjects-modal-title" class="font-bold text-base text-foreground">Configure Enrolled Subjects</h3>
+        <button class="modal-close-btn btn btn-ghost btn-sm" type="button">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-xs text-muted-foreground mb-3">Customize the subject list specifically for this student:</p>
+        <div id="student-subjects-checkboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- Populated -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-student-subjects" class="btn btn-primary">Save Student Subjects</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sonner-Style Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- =========================================================================
+       SCRIPTS (Ordered for zero-dependency execution under file:// protocol)
+       ========================================================================= -->
+  <script src="js/icons.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/classes.js"></script>
+  <script src="js/teachers.js"></script>
+  <script src="js/scores.js"></script>
+  <script src="js/report-card.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
